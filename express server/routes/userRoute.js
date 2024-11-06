@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require("express");
 const route = express.Router();
 const User = require('../models/User');
-
+route.get('/',(req,res)=>{
+    res.send("hello world");
+})
 route.get('/Connection',async(req,res)=>{
     try {
         const user = await User.findOne({
