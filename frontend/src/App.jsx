@@ -1,27 +1,17 @@
-import { useState , useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import axios from 'axios'
-import { Login } from './login'
+import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import { Login } from './login/login';
+import { Index } from './webpages/index'
 
 function App() {
-
-  async function def(){
-    await axios.get("http://127.0.0.1:8000/api/").then(function(response){
-      console.log(response.data)
-    }).catch(function(error){
-      console.log(error)
-    });
-  }
-
-  useEffect(()=>{
-    def();
-  },[])
-
   return (
     <>
-      <Login></Login>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/" element={<Index />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
