@@ -10,7 +10,6 @@ route.post('/Connection',async(req,res)=>{
             email:req.body.email,
             password:req.body.password
         });
-        console.log(user)
         if(user != null){
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.status(200).json({ token })

@@ -8,12 +8,11 @@ import { Login } from './login'
 function App() {
 
   async function def(){
-    await axios.get("http://127.0.0.1:8000/").then(function(response){
+    await axios.get("http://127.0.0.1:8000/api/").then(function(response){
       console.log(response.data)
     }).catch(function(error){
       console.log(error)
     });
-    
   }
 
   useEffect(()=>{
