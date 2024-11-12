@@ -19,7 +19,6 @@ app.use('/',express.static(path.join(__dirname,'/public')));
 app.use('/user',userRouter);
 
 mongoose.connect(process.env.MONGODB);
-console.log(process.env.MONGODB)
 mdb.on('error',(error)=>console.error(error));
 mdb.once('open',()=>console.log('connected'));
 

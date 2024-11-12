@@ -1,20 +1,21 @@
 require('dotenv').config();
 const express = require("express");
+const jwt = require('jsonwebtoken')
 const route = express.Router();
 const User = require('../models/User');
-route.get('/',(req,res)=>{
-    res.send("hello world");
-})
-route.get('/Connection',async(req,res)=>{
+
+route.post('/Connection',async(req,res)=>{
     try {
         const user = await User.findOne({
             email:req.body.email,
             password:req.body.password
         });
-        if(user.length === 0){
-            res.status(404).json({message : "User not found"});
+        console.log(user)
+        if(user != null){
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token })
         }else{
-            res.status(200).json(user)
+            res.status(200).json({message : "User not found"});
         }
     } catch (e) {
         res.status(500).send({ message : e.message });
