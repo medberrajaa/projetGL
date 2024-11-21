@@ -10,72 +10,84 @@ route.post('/Connection',async(req,res)=>{
             email:req.body.email,
             password:req.body.password
         });
-        if(user != null){
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token })
+        console.log(req.body.email,req.body.password)
+        if(user){
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '15d' });
+            return res.status(200).json({ token })
         }else{
-            res.status(200).json({message : "User not found"});
+            return res.json({message : "User not found"});
         }
     } catch (e) {
-        res.status(500).send({ message : e.message });
+        return res.status(500).send({ message : e.message });
     }
 });
 
-route.get('/getUserCreds/:id',async(req,res)=>{
+route.get('/getUserCreds',async(req,res)=>{
     try {
         const User = await User.findOne({__id:req.params.id});
-        res.status(200).json(User);
+        return res.status(200).json(User);
     } catch (e) {
-        res.status(500).send({ message : e.message });
+        return res.status(500).send({ message : e.message });
     }
 });
 
 route.post('/CreateUser',async(req,res)=>{
     try {
         const oldUser = await User.find({
-            email:req.body.email,
+            email:req.body.input.email,
         });
-        if(oldUser.length == 0){
-            const newUser = new User(req.body);
+        if(oldUser){
+            const newUser = new User(req.body.input);
             await newUser.save();
-            res.status(201).send({ message: "User created" });
+            return res.status(201).send({ message: "User created" });
         }else{
-            res.status(500).send({ message : "User already has account" });
+            return res.send({ message : "User already has account" });
         }
     } catch (e) {
-        res.status(500).send({ message : e.message });
+        return res.status(500).send({ message : e.message });
     }
 });
 
-route.put('/ModifyUserCreds/:id',async(req,res)=>{
+route.get('/VerifyToken',(req,res)=>{
+    const authHeader = req.body.headers['Authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; 
+    if (token == null) return res.sendStatus(401);  
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        return res.json({"verified":true})
+    });
+})
+
+
+route.put('/ModifyUserCreds',async(req,res)=>{
     try{
         const User = await User.findOne({ __id : req.params.id});
         if(User.length === 0){
-            res.status(404).send({ message : "not found" });
+            return res.status(404).send({ message : "not found" });
         }else{
             const result = await User.updateOne({ __id : id,$set : req.body });
             if(result.modifiedCount === 1){
-                res.status(200).send({ message : "modification successfull" });
+                return res.status(200).send({ message : "modification successfull" });
             }else{
-                res.status(405).send({ message : "not modified" });
+                return res.status(405).send({ message : "not modified" });
             }
         }
     }catch(e){
-        res.status(500).send({ message : e.message});
+        return res.status(500).send({ message : e.message});
     }
 });
 
-route.delete('/DeleteAccount/:id',async(req,res)=>{
+route.delete('/DeleteAccount',async(req,res)=>{
     const id = req.params.id;
     try {
         const result = await User.deleteOne({ _id: id });
         if (result.deletedCount === 1) {
-            res.status(200).send({ message: 'Data deleted successfully' });
+            return res.status(200).send({ message: 'Data deleted successfully' });
         } else {
-            res.status(404).send({ message: 'Data not found' });
+            return res.status(404).send({ message: 'Data not found' });
         }
     } catch (e) {
-        res.status(500).send({ message : e.message });
+        return res.status(500).send({ message : e.message });
     }
 });
 

@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRoute');
 const app = express();
 const corsOptions = require("./config/corsOptions"); 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const mdb = mongoose.connection;
 const { logger } = require('./middleware/logEvents');
 

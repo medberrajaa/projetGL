@@ -1,7 +1,8 @@
 import './App.css'
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import { Login } from './login/login';
-import { Index } from './webpages/index'
+import { Chat } from './chat/Chat';
+import { Register } from './login/register';
 
 function App() {
   return (
@@ -9,7 +10,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/" element={<Index />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/" element={<Chat />}></Route>
         </Routes>
       </BrowserRouter>
     </>
