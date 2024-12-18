@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
-@api_view(['GET'])
-def get(request):
-    return Response({"name" : "hello"})
-
-
+import json
 @api_view(['POST'])
 def post(request):
-    return Response(request.data)
+
+    data = json.loads(request.body.decode("utf-8"))
+    message = data["message"]
+    
+    return Response({"output" : message})
+

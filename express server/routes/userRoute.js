@@ -7,12 +7,11 @@ const User = require('../models/User');
 route.post('/Connection',async(req,res)=>{
     try {
         const user = await User.findOne({
-            email:req.body.email,
-            password:req.body.password
+            email:req.body.input.email,
+            password:req.body.input.password
         });
-        console.log(req.body.email,req.body.password)
         if(user){
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '15d' });
+            const token = jwt.sign({ userId: user.id , userFName:user.fname , userLName:user.lname }, process.env.JWT_SECRET, { expiresIn: '15d' });
             return res.status(200).json({ token })
         }else{
             return res.json({message : "User not found"});

@@ -7,13 +7,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRoute');
 const app = express();
-const corsOptions = require("./config/corsOptions"); 
 const PORT = process.env.PORT;
 const mdb = mongoose.connection;
 const { logger } = require('./middleware/logEvents');
 
 app.use(logger);
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/',express.static(path.join(__dirname,'/public')));
 app.use('/user',userRouter);
